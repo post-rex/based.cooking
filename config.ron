@@ -1,0 +1,16 @@
+(
+    vars: {
+        "BLOG_TITLE": Text("Based Cooking"),
+    },
+    dist: "blog",
+    src: [
+        ("index.html", Md (
+            src: "index.md", // Im aware this needs to be replaced by `git ls-tree HEAD --name-only -- $(BLOG_SRC)/*.md 2>/dev/null`
+            template: "templates/wrapper.html",
+        )),
+        ("", Md (
+            src: "src/*.md", // Im aware this needs to be replaced by `git ls-tree HEAD --name-only -- $(BLOG_SRC)/*.md 2>/dev/null`
+            template: "templates/article.html",
+        )),
+    ],
+)
