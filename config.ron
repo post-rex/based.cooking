@@ -6,10 +6,13 @@
     src: [
         ("index.html", Html("templates/index.html")),
         ("", Md (
-            src: "src/*.md", // Im aware this needs to be replaced by `git ls-tree HEAD --name-only -- $(BLOG_SRC)/*.md 2>/dev/null`
+            src: Stdin("git ls-tree HEAD --name-only -- $(BLOG_SRC)/*.md"),
             template: "templates/article.html",
+            eval_vars: {
+                "AUTHOR": Eval(Regex("# (.+)$", 1, First(Lines(Load(Var("FILE"))))))
+            }
         )),
-        ("", Copy ("data/*.css")),
-        ("pix", Copy ("data/pix/*.webp"))
+        ("", Copy("data/*.css")),
+        ("pix", Copy("data/pix/*.webp"))
     ],
 )
