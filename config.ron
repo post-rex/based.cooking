@@ -9,5 +9,7 @@
             src: "src/*.md", // Im aware this needs to be replaced by `git ls-tree HEAD --name-only -- $(BLOG_SRC)/*.md 2>/dev/null`
             template: "templates/article.html",
         )),
+        ("", Copy ("data/*.css")),
+        ("pix", Copy ("data/pix/*.webp"))
     ],
 )
