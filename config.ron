@@ -1,6 +1,7 @@
 (
     vars: {
         "BLOG_TITLE": Text("Based Cooking"),
+        "BLOG_DATE_FORMAT": Text("%F"),
     },
     dist: "blog",
     src: [
@@ -9,9 +10,15 @@
             src: Stdin("git ls-tree HEAD --name-only -- $(BLOG_SRC)/*.md"),
             template: "templates/article.html",
             eval_vars: {
-                "AUTHOR": Eval(Regex("# (.+)$", 1, First(Lines(Load(Var("FILE"))))))
-            }
+                "AUTHOR": Shell("git log --format='%an' -- \"$FILE\" | tail -n 1"),
+                "DATE_POSTED": Shell("git log -n 1 --diff-filter=A --date=\"format:$BLOG_DATE_FORMAT\" --pretty=format:'%ad' -- \"$FILE\""),
+                "DATE_EDITED": Shell("grep -i '^; *tags:' \"$FILE\" | cut -d: -f2- | paste -sd ','"),
+            },
+            group: {
+                "tags": Words
+            },
         )),
+        ("", Group("templates/tags.html", Fmt("@{GROUP}.html"))),
         ("", Copy("data/*.css")),
         ("pix", Copy("data/pix/*.webp"))
     ],
